@@ -1,0 +1,10 @@
+{
+  "preferences": [
+    {
+      "key": "cal",
+      "rule": "I do not take meetings before 11:00am",
+      "source": "m041",
+      "applies_to": []
+    }
+  ]
+}
