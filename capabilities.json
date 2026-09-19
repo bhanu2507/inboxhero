@@ -1,6 +1,6 @@
 {
   "student": "Bhanu Mokkala, cert-aai-2026-06-0009",
-  "repo": "https://github.com/BhanuMokkala/inboxhero",
+  "repo": "https://github.com/bhanu2507/inboxhero",
   "system": {
     "framework": "none",
     "model": "gemini-2.0-flash for triage reasoning on the 33 messages no rule decides; developed and graded against the deterministic path so every command runs with no API key",

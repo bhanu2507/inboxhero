@@ -1,6 +1,6 @@
 # inboxHero
 
-**Repository:** https://github.com/BhanuMokkala/inboxhero
+**Repository:** https://github.com/bhanu2507/inboxhero
 
 Assignment 06 — *Agentic AI: From Concepts to Practice*, IIIT Hyderabad.
 Bhanu Mokkala, cert-aai-2026-06-0009.
