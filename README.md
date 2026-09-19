@@ -3,7 +3,7 @@
 **Repository:** https://github.com/BhanuMokkala/inboxhero
 
 Assignment 06 — *Agentic AI: From Concepts to Practice*, IIIT Hyderabad.
-Bhanu Mokkala, ROLL_NUMBER.
+Bhanu Mokkala, cert-aai-2026-06-0009.
 
 An agentic system that takes a 100-message inbox from unread to empty by
 deciding what to do with every message, doing the parts it should do, and
@@ -112,9 +112,7 @@ for the run. The **router** is the ordered check at the top of
 message is worth spending on.
 
 A framework would have given me retry and rate-limit handling; I wrote that by
-hand in `llm.py`. Using one here would have hurt: CrewAI or ADK would put a
-tool-dispatch layer between the model and `actions.py`, and the whole safety
-argument of this system is that no such path exists.
+hand in `llm.py`. 
 
 ## Submission
 

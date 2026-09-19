@@ -1,6 +1,6 @@
 # CAPABILITIES.md — inboxHero
 
-**Student:** Bhanu Mokkala, ROLL_NUMBER
+**Student:** Bhanu Mokkala, cert-aai-2026-06-0009
 **Repository:** https://github.com/BhanuMokkala/inboxhero
 
 Run everything through one entry point:
