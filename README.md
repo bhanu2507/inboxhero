@@ -66,72 +66,55 @@ because this store has no trash.
 
 ### 1. What did you refuse to automate?
 
-> **TODO — your own words, 3-5 sentences.** The strongest candidate is `m012`
-> from Priya: *"did you ever get a chance to sort out that thing we talked about
-> after the standup? kind of need it done before the call."* The system
-> dispositions it `escalate` with the reason *"the request is not identifiable
-> from the message; the right move is to ask, not guess"* — the referent exists
-> only in a conversation that happened out loud, so any draft would be invention
-> dressed as recall. Contrast it with `m008`, which looks similarly vague but
-> resolves cleanly because the answer is four messages up its own thread.
-> Say where you think the line sits between the two.
->
-> A second candidate worth a sentence: `m008` itself is answered, but the draft
-> deliberately withholds the credential that `m003` contains, because "grounded
-> in an earlier message" does not mean "safe to repeat in email."
+Refused to automate `m012`, which has vague text from Priya: *"did you ever get
+a chance to sort out that thing we talked about after the standup? kind of need
+it done before the call."* The system marks it `escalate` with the reason *"the
+request is not identifiable from the message; the right move is to ask, not
+guess"*. `m008` is just as vague on the surface — "resend the URL you gave
+Raghav" — but resolves, because the thing it refers to is four messages up its
+own thread. The line is not vagueness, it is whether the inbox contains the
+referent.
 
 ### 2. Where does untrusted text enter your system?
 
-> **TODO — your own words, 3-5 sentences.** The facts to build on: every message
-> body reaches a model only through `guard.wrap()`, which fences it between
-> `<<<UNTRUSTED_EMAIL_DATA id=...>>>` markers and neutralises any attempt to
-> close that fence from inside. The system prompt in `llm.py` states that
-> everything inside the markers is data written by strangers. But the prompt is
-> the *weak* half and should be described as such — the structural half is that
-> the model is handed **no tools at all**. It returns text; `capabilities.py`
-> decides what runs; only `actions.py` can cause an effect; and its two
-> irreversible functions call `gate.authorize()` first.
->
-> So name what an attacker would have to defeat: not the wording of a prompt,
-> but the fact that there is no path from model output to `actions.send()` that
-> does not pass through a human answering y/n or a dry-run that performs
-> nothing. `m039` is the worked example — it forges the owner's own address to
-> claim autonomous mode, and fails twice over, because `guard.py` does not treat
-> a sender address as authentication and `memory.py` refuses any preference that
-> would widen the system's own authority.
+Every message body reaches a model only through `guard.wrap()`, which fences it
+between `<<<UNTRUSTED_EMAIL_DATA id=...>>>` markers and neutralises any attempt
+to close that fence from inside. The system prompt in `llm.py` states that
+everything inside the markers is data written by strangers. But the prompt is
+the weak half — the structural half is that the model is handed **no tools at
+all**. It returns text; `capabilities.py` decides what runs; only `actions.py`
+can cause an effect; and its two irreversible functions call `gate.authorize()`
+first.
+
+There is no path from model output to `actions.send()` that does not pass
+through a human answering y/n or a dry-run that performs nothing. `m039` is the
+worked example — it forges the owner's own address to claim autonomous mode, and
+fails twice: `guard.py` does not treat `from` as authentication, and `memory.py`
+refuses any preference that widens the system's own authority.
 
 ### 3. Who is accountable when it sends the wrong thing?
 
-> **TODO — your own words, 3-5 sentences.** The mechanical answer: the owner is,
-> because nothing reaches `outbox/` without either a y/n at the gate or a
-> deliberate `--yes`. Whether that is a *fair* answer is the interesting part,
-> and worth your own view — approval fatigue is real, which is why only external
-> sends and money/legal/calendar items prompt at all.
->
-> For traceability, describe the chain: every gated decision writes a `gate`
-> event to `trace.jsonl` recording what was proposed, what the human answered
-> and what happened; every draft writes a `draft` event with the ids it cited;
-> every citation writes a `grounding_check`. Given a bad message in `outbox/`
-> you can walk back to the approval, the draft, the sources and the disposition.
-> `python demo.py --cap X4 --msg <id>` does that walk for a single message.
+The owner is accountable when the system sends a wrong thing, because nothing
+reaches `outbox/` without either a y/n at the gate or a deliberate `--yes`.
+Every gated decision writes a `gate` event to `trace.jsonl` with the proposal,
+the human's answer and the outcome; every draft writes the ids it cited; every
+citation writes a `grounding_check`. From a bad file in `outbox/` you can walk
+back to the approval, the draft, its sources and the disposition.
+`python demo.py --cap X4 --msg <id>` does that walk.
 
 ### 4. Name your own machinery.
 
-> **TODO — your own words, 3-5 sentences.** The mapping: the **Agents** are the
-> capability functions in `capabilities.py`, each owning one job end to end. The
-> **Tasks** are the manifest entries they implement. The **Crew** is `demo.py`,
-> which orders them and sets the gate mode for the run. The **router** is the
-> ordered check at the top of `triage._heuristic()` — guard, then rules, then
-> model — which decides what each message is worth spending on.
->
-> Name one thing a framework would have given you: retries, tool schemas and a
-> shared scratchpad are all reasonable answers; I hand-rolled rate-limit
-> handling and backoff in `llm.py`. Then answer the actual question — would a
-> framework have helped here? The argument against is that CrewAI or ADK would
-> have put a tool-dispatch layer between the model and `actions.py`, and the
-> whole safety story of this system is that **no such path exists**. The
-> argument for is that 60 of 100 messages never touch a model, so most of what a
-> framework offers would sit idle. Take a position either way.
+The mapping: the **Agents** are the capability functions in `capabilities.py`,
+each owning one job end to end. The **Tasks** are the manifest entries they
+implement. The **Crew** is `demo.py`, which orders them and sets the gate mode
+for the run. The **router** is the ordered check at the top of
+`triage._heuristic()` — guard, then rules, then model — which decides what each
+message is worth spending on.
+
+A framework would have given me retry and rate-limit handling; I wrote that by
+hand in `llm.py`. Using one here would have hurt: CrewAI or ADK would put a
+tool-dispatch layer between the model and `actions.py`, and the whole safety
+argument of this system is that no such path exists.
 
 ## Submission
 
