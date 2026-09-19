@@ -1,10 +1,14 @@
 {
   "preferences": [
     {
-      "key": "cal",
-      "rule": "I do not take meetings before 11:00am",
+      "key": "meeting_floor",
+      "rule": "no meetings before 11:00am; offer 11:00 or later",
       "source": "m041",
-      "applies_to": []
+      "applies_to": [
+        "m043",
+        "m010",
+        "m016"
+      ]
     }
   ]
 }
