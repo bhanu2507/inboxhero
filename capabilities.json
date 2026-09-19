@@ -6,10 +6,27 @@
     "model": "gemini-2.0-flash for triage reasoning on the 33 messages no rule decides; developed and graded against the deterministic path so every command runs with no API key",
     "messages_processed": 100,
     "rule_handled": "60 of 100 never reached a model; a further 7 were stopped by the guard, leaving 33 on the model path",
-    "dispositions": ["reply", "archive", "defer", "delegate", "escalate", "quarantine"],
+    "dispositions": [
+      "reply",
+      "archive",
+      "defer",
+      "delegate",
+      "escalate",
+      "quarantine"
+    ],
     "retrieval": "thread-walk, with keyword search as the cross-thread fallback",
-    "irreversible": ["send", "delete"],
-    "reversible": ["draft", "label", "archive", "defer", "cc", "flag"],
+    "irreversible": [
+      "send",
+      "delete"
+    ],
+    "reversible": [
+      "draft",
+      "label",
+      "archive",
+      "defer",
+      "cc",
+      "flag"
+    ],
     "gate": "both",
     "preference_demo": "m041: no meetings before 11:00am, applied to m043 on a later run"
   },
@@ -36,9 +53,9 @@
       "id": "R3",
       "name": "Gate the irreversible",
       "tier": "C",
-      "claim": "No send or delete can happen without either per-action approval or an explicit dry-run that shows exactly what it would do. Every gated decision is logged with what was proposed, what the human said, and what happened.",
+      "claim": "No send or delete happens without either per-action approval or an explicit dry-run showing exactly what it would do. Every gated decision is logged with what was proposed, what the human said and what happened; deleting a flagged message is refused before the gate is even consulted.",
       "command": "python demo.py --cap R3",
-      "observable": "Prints '[DRY-RUN] would send' lines for two external replies and one delete, then 'outbox writes this run: 0' and a table of three gated decisions. Re-running as 'python demo.py --cap R3 --approve' prompts y/N before each one.",
+      "observable": "Prints '[DRY-RUN] would send' for two external replies and 'would delete' for a superseded notification, then 'outbox writes this run: 0' and a table of three gated decisions. A fourth proposal, deleting the injection m024, prints '[REFUSED] ... not offered to the gate' \u2014 a hostile message cannot be deleted even under blanket approval. Re-running as 'python demo.py --cap R3 --approve' prompts y/N before each; '--yes' approves them and writes exactly 2 files to outbox/.",
       "evidence": "trace.jsonl, events tagged cap=R3 ('gate' events recording action, target, human answer and outcome)"
     },
     {

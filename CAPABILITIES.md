@@ -52,6 +52,12 @@ in small JSON files on disk.
   no trash, so a delete destroys the only copy — and because deletion is exactly
   what an attacker asks for (`m024` requests its own deletion), making it cheap
   would be a mistake.
+- **One thing the gate cannot be talked into.** Deleting a quarantined message
+  is refused in `actions.delete()` *before* `gate.authorize()` is consulted.
+  `m024` asks to be deleted, and Part 6.4 says flag it and leave it in place —
+  so there is no answer a tired human could give at the prompt that would carry
+  it out. Everything else irreversible is a gate decision; this one is not
+  offered.
 - **Where the gate sits.** `actions.py` is the only module that can affect
   anything outside the process, and its two irreversible functions call
   `gate.authorize()` before doing anything. Nothing else in the system can reach

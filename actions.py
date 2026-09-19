@@ -39,7 +39,20 @@ def send(to, subject, body, why, cap=None, cc=None, in_reply_to=None):
 
 
 def delete(message_id, why, cap=None):
-    """Gated, and never called on a hostile message — those are flagged in place."""
+    """Gated — and a hostile message can never be deleted, approval or not.
+
+    Part 6.4 says flag it and leave it in place. m024 asks to be deleted, so
+    deletion of a quarantined message is refused BEFORE the gate is consulted:
+    there is no answer a tired human could give that would carry it out.
+    """
+    import guard, data
+    msg = data.by_id(message_id)
+    if msg and guard.screen(msg)["hostile"]:
+        trace.emit("delete_refused", cap=cap, message_id=message_id,
+                   reason="hostile message; flagged and left in place per Part 6.4")
+        print("  [REFUSED] delete %s -> hostile message, flagged and left in "
+              "place; not offered to the gate" % message_id)
+        return False
     if not gate.authorize("delete", message_id, why, cap=cap):
         return False
     _deleted.add(message_id)

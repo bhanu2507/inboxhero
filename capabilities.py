@@ -88,7 +88,10 @@ def R3_gate(approve=None):
     for mid, to, subject, body, why in proposals:
         actions.send(to, subject, body, why=why, cap="R3", in_reply_to=mid)
 
-    actions.delete("m024", why="hostile message asked to be deleted", cap="R3")
+    # m024 is the injection that asks to be deleted. It never reaches the gate.
+    actions.delete("m024", why="the message itself asked to be deleted", cap="R3")
+    # A genuinely disposable notification does reach the gate, and waits there.
+    actions.delete("m096", why="storage notice superseded by a later one", cap="R3")
 
     after = actions.outbox_count()
     print("\noutbox writes this run: %d" % (after - before))
